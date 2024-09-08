@@ -1,0 +1,4 @@
+disnake[voice]
+typing-extensions
+yt-dlp
+asyncio
