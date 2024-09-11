@@ -183,7 +183,7 @@ class Music(commands.Cog):
             config = json.load(f)
 
         if config.get("use-oauth-plugin"):
-            youtube_regex = r"^(?:https?:\/\/)?(m\.|music\.|www\.)?(youtube\.[a-zA-Z]{2,})([\/\w\-._~:?#@!$&'()*+,;=%]*)?"
+            youtube_regex = r"^(?:https?:\/\/)?(?:www\.)?(youtu\.be\/[a-zA-Z0-9_-]+|youtube\.[a-zA-Z]{2,3}\/[a-zA-Z0-9_-]+)"
             if re.findall(youtube_regex, query) or not re.findall(http_regex, query):
                 ydl_opts.update({
                     'username': 'oauth2',
