@@ -182,7 +182,7 @@ class Music(commands.Cog):
 
     async def download_music(self, query):
         ydl_opts = {
-            'format': 'opus/bestaudio',
+            'format': 'opus/bestaudio/best',
             'outtmpl': './temp/%(title)s [%(id)s].%(ext)s',
             'addmetadata': True,
             'postprocessors': [{
