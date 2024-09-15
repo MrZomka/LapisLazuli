@@ -136,6 +136,11 @@ class Music(commands.Cog):
 
         if len(state["queue"]) > 0:
             song_file, title, inter = state["queue"].pop(0)
+
+            if inter.author.voice is None or inter.author.voice.channel is None:
+                await inter.followup.send("You need to be in a voice channel to play music!")
+                return
+
             voice_channel = inter.author.voice.channel
 
             if not inter.guild.voice_client:
