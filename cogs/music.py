@@ -22,6 +22,13 @@ class Music(commands.Cog):
 
     @commands.slash_command(description="Play music")
     async def play(self, inter, query: str):
+        if not inter.author.voice or not inter.author.voice.channel:
+            await inter.response.send_message("You need to be in a voice channel to play music.")
+            return
+        if inter.guild.voice_client:
+            if inter.guild.voice_client and inter.guild.voice_client.channel != inter.author.voice.channel:
+                await inter.response.send_message("You need to be in the same voice channel as the bot to play music.")
+                return
         await inter.response.send_message("Downloading...")
         await self.play_music(inter, query)
 
@@ -137,16 +144,16 @@ class Music(commands.Cog):
         if len(state["queue"]) > 0:
             song_file, title, inter = state["queue"].pop(0)
 
-            if inter.author.voice is None or inter.author.voice.channel is None:
-                await inter.followup.send("You need to be in a voice channel to play music!")
-                return
+            voice_client = inter.guild.voice_client
 
-            voice_channel = inter.author.voice.channel
+            if not voice_client:
+                if inter.author.voice:
+                    voice_channel = inter.author.voice.channel
+                else:
+                    await inter.followup.send("Error: Not in a voice channel. Try again.")
+                    return
 
-            if not inter.guild.voice_client:
                 voice_client = await voice_channel.connect()
-            else:
-                voice_client = inter.guild.voice_client
 
             state["is_playing"] = True
             state["current_song"] = (title, inter.author)
