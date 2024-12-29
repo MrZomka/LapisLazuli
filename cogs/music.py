@@ -1,5 +1,5 @@
-import json
 import re
+
 import disnake
 import yt_dlp
 import asyncio
@@ -185,25 +185,14 @@ class Music(commands.Cog):
             'format': 'opus/bestaudio/best',
             'outtmpl': './temp/%(title)s [%(id)s].%(ext)s',
             'addmetadata': True,
+            'cookiefile': './cookies.txt',
             'postprocessors': [{
                 'key': 'FFmpegMetadata',
             }]
         }
 
         http_regex = r"^(?:https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+([\/\w\-._~:?#@!$&'()*+,;=%]*)?"
-        with open('config.json') as f:
-            config = json.load(f)
-
-        if config.get("use-oauth-plugin"):
-            youtube_regex = r"^(?:https?:\/\/)?(?:www\.)?(youtu\.be\/[a-zA-Z0-9_-]+|youtube\.[a-zA-Z]{2,3}\/[a-zA-Z0-9_-]+)"
-            if re.findall(youtube_regex, query) or not re.findall(http_regex, query):
-                ydl_opts.update({
-                    'username': 'oauth2',
-                    'password': '',
-                })
-            if not re.findall(http_regex, query):
-                query = f"ytsearch:{query}"
-        elif not re.findall(http_regex, query):
+        if not re.findall(http_regex, query):
             query = f"ytsearch:{query}"
 
         def download(query_int):
